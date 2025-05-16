@@ -1,0 +1,126 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Al-Teas Cafe Menu</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #ffffff;
+      color: #2e7d32;
+      padding: 20px;
+      max-width: 400px;
+      margin: auto;
+      border: 2px solid #2e7d32;
+      border-radius: 10px;
+    }
+    h1 {
+      text-align: center;
+      color: #2e7d32;
+    }
+    .item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 10px 0;
+    }
+    .item button {
+      background-color: #2e7d32;
+      color: white;
+      border: none;
+      padding: 4px 8px;
+      margin: 0 4px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .summary {
+      margin-top: 20px;
+      border-top: 1px solid #2e7d32;
+      padding-top: 10px;
+    }
+    .whatsapp-button {
+      margin-top: 20px;
+      background-color: #25d366;
+      color: white;
+      border: none;
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Al-Teas Cafe Menu</h1>  <div id="menu">
+    <div class="item">
+      <span>Chocolate Milkshake</span>
+      <div>
+        <button onclick="updateQty('chocolate', -1)">-</button>
+        <span id="qty-chocolate">0</span>
+        <button onclick="updateQty('chocolate', 1)">+</button>
+      </div>
+    </div>
+    <div class="item">
+      <span>Strawberry Milkshake</span>
+      <div>
+        <button onclick="updateQty('strawberry', -1)">-</button>
+        <span id="qty-strawberry">0</span>
+        <button onclick="updateQty('strawberry', 1)">+</button>
+      </div>
+    </div>
+    <div class="item">
+      <span>Vanilla Milkshake</span>
+      <div>
+        <button onclick="updateQty('vanilla', -1)">-</button>
+        <span id="qty-vanilla">0</span>
+        <button onclick="updateQty('vanilla', 1)">+</button>
+      </div>
+    </div>
+  </div>  <div class="summary">
+    <h3>Your Order</h3>
+    <ul id="order-summary"></ul>
+  </div>  <button class="whatsapp-button" onclick="sendOrderToWhatsApp()">
+    Send via WhatsApp
+  </button>  <script>
+    const items = {
+      chocolate: 0,
+      strawberry: 0,
+      vanilla: 0
+    };
+
+    function updateQty(item, change) {
+      items[item] = Math.max(0, items[item] + change);
+      document.getElementById(`qty-${item}`).textContent = items[item];
+      updateSummary();
+    }
+
+    function updateSummary() {
+      const summary = document.getElementById("order-summary");
+      summary.innerHTML = "";
+      for (const [key, qty] of Object.entries(items)) {
+        if (qty > 0) {
+          const li = document.createElement("li");
+          li.textContent = `${capitalize(key)} Milkshake x ${qty}`;
+          summary.appendChild(li);
+        }
+      }
+    }
+
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    function sendOrderToWhatsApp() {
+      let message = "Hi, I would like to order the following:\n";
+      for (const [key, qty] of Object.entries(items)) {
+        if (qty > 0) {
+          message += `- ${capitalize(key)} Milkshake x ${qty}\n`;
+        }
+      }
+      const encodedMsg = encodeURIComponent(message);
+      const phone = "YOUR_PHONE_NUMBER"; // Replace with your WhatsApp number
+      window.open(`https://wa.me/${phone}?text=${encodedMsg}`, "_blank");
+    }
+  </script></body>
+</html>
